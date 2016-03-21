@@ -22,12 +22,12 @@ public class BoardPosition {
     }
 
     public void applyNode(SGFNode node) {
-        moveNumber++;
         if (node.getProperties().containsKey("W")) {
             for (String move : node.getProperties().get("W").getValues()) {
                 board[move.charAt(0) - 'a'][move.charAt(1) - 'a'] = 2;
                 lastMove[0] = move.charAt(0) - 'a';
                 lastMove[1] = move.charAt(1) - 'a';
+                moveNumber++;
             }
         }
         if (node.getProperties().containsKey("B")) {
@@ -35,6 +35,7 @@ public class BoardPosition {
                 board[move.charAt(0) - 'a'][move.charAt(1) - 'a'] = 1;
                 lastMove[0] = move.charAt(0) - 'a';
                 lastMove[1] = move.charAt(1) - 'a';
+                moveNumber++;
             }
         }
 
