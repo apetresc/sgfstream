@@ -111,6 +111,14 @@ public class BoardPosition {
         return boardSize;
     }
 
+    public int[] getLastMove() {
+        return lastMove;
+    }
+
+    public int getMoveNumber() {
+        return moveNumber;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
