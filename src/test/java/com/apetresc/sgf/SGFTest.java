@@ -22,6 +22,8 @@ public class SGFTest extends TestCase {
         while (it.hasNext()) {
             SGFNode move = it.next();
             assertTrue(move.getProperties().containsKey("W") || move.getProperties().containsKey("B"));
+            System.out.println(move.getBoardPosition());
+            System.out.println("");
         }
 
         System.out.println(sgf.toString());

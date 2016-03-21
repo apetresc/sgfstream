@@ -1,18 +1,20 @@
 package com.apetresc.sgfstream;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class SGFNode {
 
-    Map<String, SGFProperty> properties = new HashMap<String, SGFProperty>();
+    private Map<String, SGFProperty> properties = new HashMap<String, SGFProperty>();
+    private SGFSequence parent;
     
     private Set captures;
     private String previousComment;
     private int[] previousMove;
+
+    public SGFNode(SGFSequence parent) {
+        this.parent = parent;
+    }
 
     void addProperty(SGFProperty property) {
         properties.put(property.getIdent(), property);
@@ -22,8 +24,8 @@ public class SGFNode {
         return properties;
     }
 
-    static SGFNode fromStream(SGFStreamReader stream) throws IOException, IncorrectFormatException {
-        SGFNode node = new SGFNode();
+    static SGFNode fromStream(SGFStreamReader stream, SGFSequence parent) throws IOException, IncorrectFormatException {
+        SGFNode node = new SGFNode(parent);
         if (!(stream.readCharacter() == ';')) {
             throw new IncorrectFormatException();
         }
@@ -33,6 +35,36 @@ public class SGFNode {
         }
 
         return node;
+    }
+
+    public SGFSequence getParent() {
+        return parent;
+    }
+
+    public BoardPosition getBoardPosition() {
+        Stack<SGFGameTree> treeStack = new Stack<SGFGameTree>();
+        treeStack.push(parent.getParent());
+        while (treeStack.peek().getParent() != null) {
+            treeStack.push(treeStack.peek().getParent());
+        }
+
+        BoardPosition boardPosition = new BoardPosition(
+                Integer.parseInt(treeStack.peek().getSequence().getNodes().get(0).getProperties().get("SZ").getValues()[0]));
+
+        outer:
+        while (!treeStack.empty()) {
+            SGFGameTree tree = treeStack.pop();
+            SGFSequence sequence = tree.getSequence();
+            inner:
+            for (SGFNode node : sequence.getNodes()) {
+                boardPosition.applyNode(node);
+                if (this == node) {
+                    break outer;
+                }
+            }
+        }
+
+        return boardPosition;
     }
 
     public void setCaptures(Set captures) {

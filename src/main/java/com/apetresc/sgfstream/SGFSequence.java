@@ -7,22 +7,31 @@ import java.util.List;
 
 public class SGFSequence {
 
-    private List nodes = new LinkedList();
+    private SGFGameTree parent;
+    private List<SGFNode> nodes = new LinkedList<SGFNode>();
+
+    public SGFSequence(SGFGameTree parent) {
+        this.parent = parent;
+    }
+
+    public SGFGameTree getParent() {
+        return parent;
+    }
 
     void addNode(SGFNode node) {
         nodes.add(node);
     }
 
-    public List getNodes() {
+    public List<SGFNode> getNodes() {
         return nodes;
     }
 
-    static SGFSequence fromStream(SGFStreamReader stream) throws IOException, IncorrectFormatException {
-        SGFSequence sequence = new SGFSequence();
-        sequence.addNode(SGFNode.fromStream(stream));
+    static SGFSequence fromStream(SGFStreamReader stream, SGFGameTree parent) throws IOException, IncorrectFormatException {
+        SGFSequence sequence = new SGFSequence(parent);
+        sequence.addNode(SGFNode.fromStream(stream, sequence));
 
         while (stream.peek() == ';') {
-            sequence.addNode(SGFNode.fromStream(stream));
+            sequence.addNode(SGFNode.fromStream(stream, sequence));
         }
 
         return sequence;

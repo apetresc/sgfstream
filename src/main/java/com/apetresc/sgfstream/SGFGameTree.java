@@ -34,7 +34,7 @@ public class SGFGameTree {
             throw new IncorrectFormatException();
         }
 
-        gameTree.sequence = SGFSequence.fromStream(stream);
+        gameTree.sequence = SGFSequence.fromStream(stream, gameTree);
 
         while (!(stream.peek() == ')')) {
             subtrees.add(SGFGameTree.fromStream(stream, gameTree));
