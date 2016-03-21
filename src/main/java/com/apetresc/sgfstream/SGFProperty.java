@@ -54,7 +54,7 @@ public class SGFProperty {
     }
 
     static SGFProperty fromStream(SGFStreamReader stream) throws IOException, IncorrectFormatException {
-        StringBuffer propIdent = new StringBuffer();
+        StringBuilder propIdent = new StringBuilder();
         while (Character.isUpperCase(stream.peek())) {
             propIdent.append(stream.readCharacter());
         }
@@ -66,7 +66,7 @@ public class SGFProperty {
 
         while (stream.peek() == '[') {
             stream.readCharacter();
-            StringBuffer propValue = new StringBuffer();
+            StringBuilder propValue = new StringBuilder();
             boolean escape = false;
 
             while (!escape && (stream.peek(false) != ']')) {
@@ -88,12 +88,12 @@ public class SGFProperty {
     }
 
     public String toString() {
-        String result = propIdent;
+        StringBuilder result = new StringBuilder(propIdent);
         String[] values = getValues();
         for (int i = 0; i < values.length; i++) {
-            result += "[" + escapePropertyValue(values[i]) + "]";
+            result.append("[" + escapePropertyValue(values[i]) + "]");
         }
-        return result;
+        return result.toString();
     }
 
 }

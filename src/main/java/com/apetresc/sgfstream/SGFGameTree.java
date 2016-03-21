@@ -47,12 +47,12 @@ public class SGFGameTree {
     }
 
     public String toString() {
-        String result = "(";
-        result += sequence.toString();
+        StringBuilder result = new StringBuilder("(");
+        result.append(sequence.toString());
         for (int i = 0; i < subtrees.length; i++) {
-            result += subtrees[i].toString();
+            result.append(subtrees[i].toString());
         }
-        result += ")";
-        return result;
+        result.append(")");
+        return result.toString();
     }
 }

@@ -29,12 +29,12 @@ public class SGFSequence {
     }
 
     public String toString() {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         Iterator i = nodes.iterator();
         while (i.hasNext()) {
-            result += i.next().toString();
+            result.append(i.next().toString());
         }
-        return result;
+        return result.toString();
     }
 
 }

@@ -60,12 +60,12 @@ public class SGFNode {
     }
     
     public String toString() {
-        String result = ";";
+        StringBuilder result = new StringBuilder(";");
         Iterator<SGFProperty> i = properties.values().iterator();
         while (i.hasNext()) {
-            result += i.next().toString();
+            result.append(i.next().toString());
         }
-        return result;
+        return result.toString();
     }
 
 }
