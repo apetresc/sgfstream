@@ -1,5 +1,6 @@
 package com.apetresc.sgfstream;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -21,30 +22,19 @@ public class SGFNode {
         return properties;
     }
 
-    static SGFNode fromString(StringBuffer sgf) throws IncorrectFormatException {
+    static SGFNode fromStream(SGFStreamReader stream) throws IOException, IncorrectFormatException {
         SGFNode node = new SGFNode();
-        if (!(sgf.charAt(0) == ';')) {
+        if (!(stream.readCharacter() == ';')) {
             throw new IncorrectFormatException();
         }
-        sgf.deleteCharAt(0);
 
-        /* Remove leading whitespace */
-        while (Character.isWhitespace(sgf.charAt(0))) {
-            sgf.deleteCharAt(0);
-        }
-
-        while (Character.isUpperCase(sgf.charAt(0))) {
-            node.addProperty(SGFProperty.fromString(sgf));
-
-            /* Remove leading whitespace */
-            while (Character.isWhitespace(sgf.charAt(0))) {
-                sgf.deleteCharAt(0);
-            }
+        while (Character.isUpperCase(stream.peek())) {
+            node.addProperty(SGFProperty.fromStream(stream));
         }
 
         return node;
     }
-    
+
     public void setCaptures(Set captures) {
         this.captures = captures;
     }

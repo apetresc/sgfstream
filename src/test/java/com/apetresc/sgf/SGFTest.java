@@ -4,17 +4,16 @@ import com.apetresc.sgfstream.IncorrectFormatException;
 import com.apetresc.sgfstream.SGF;
 import com.apetresc.sgfstream.SGFNode;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.IOException;
 
 import com.apetresc.sgfstream.SGFIterator;
 import junit.framework.TestCase;
 
 public class SGFTest extends TestCase {
 
-    public void testSimpleSgf() throws IncorrectFormatException {
+    public void testSimpleSgf() throws IOException, IncorrectFormatException {
         SGF sgf = new SGF();
-        sgf.parseSGF(new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("/sgf/simple.sgf"))));
+        sgf.parseSGF(this.getClass().getResourceAsStream("/sgf/simple.sgf"));
 
         assertNotNull(sgf.getRootTree());
         SGFIterator it = sgf.iterator();
@@ -24,5 +23,7 @@ public class SGFTest extends TestCase {
             SGFNode move = it.next();
             assertTrue(move.getProperties().containsKey("W") || move.getProperties().containsKey("B"));
         }
+
+        System.out.println(sgf.toString());
     }
 }

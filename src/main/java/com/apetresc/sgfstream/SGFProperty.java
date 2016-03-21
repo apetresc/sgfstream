@@ -1,6 +1,8 @@
 package com.apetresc.sgfstream;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class SGFProperty {
 
@@ -48,63 +50,38 @@ public class SGFProperty {
     }
 
     private String escapePropertyValue(String unescapedString) {
-        String escapedString = "";
-        for (int i = 0; i < unescapedString.length(); i++) {
-            char c = unescapedString.charAt(i);
-            switch (c) {
-            case ']':
-                escapedString += '\\';
-            default:
-                escapedString += c;
-            } 
-        }
-        return escapedString;
+        return unescapedString.replaceAll(Pattern.quote("]"), "\\]");
     }
 
-    static SGFProperty fromString(StringBuffer sgf)
-    throws IncorrectFormatException {
-
-        /* Remove leading whitespace */
-        if (!Character.isUpperCase(sgf.charAt(0))) {
+    static SGFProperty fromStream(SGFStreamReader stream) throws IOException, IncorrectFormatException {
+        StringBuffer propIdent = new StringBuffer();
+        while (Character.isUpperCase(stream.peek())) {
+            propIdent.append(stream.readCharacter());
+        }
+        if (!(stream.peek() == '[')) {
             throw new IncorrectFormatException();
         }
 
-        String propIdent = String.valueOf(sgf.charAt(0));
-        sgf.deleteCharAt(0);
-        while (Character.isUpperCase(sgf.charAt(0))) {
-            propIdent += String.valueOf(sgf.charAt(0));
-            sgf.deleteCharAt(0);
-        }
+        SGFProperty property = new SGFProperty(propIdent.toString());
 
-        if (!(sgf.charAt(0) == '[')) {
-            throw new IncorrectFormatException();
-        }
-
-        SGFProperty property = new SGFProperty(propIdent);
-
-
-        while (sgf.charAt(0) == '[') {
-            sgf.deleteCharAt(0);
-            String propValue = "";
+        while (stream.peek() == '[') {
+            stream.readCharacter();
+            StringBuffer propValue = new StringBuffer();
             boolean escape = false;
-            while (!escape && !(sgf.charAt(0) == ']')) {
+
+            while (!escape && (stream.peek(false) != ']')) {
                 escape = false;
-                char nextChar = sgf.charAt(0);
-                sgf.deleteCharAt(0);
+                char nextChar = stream.readCharacter(false);
 
                 if (nextChar == '\\') {
                     escape = true;
                 } else {
-                    propValue += String.valueOf(nextChar);
+                    propValue.append(nextChar);
                 }
             }
-            sgf.deleteCharAt(0);
-            property.addValue(propValue);
 
-            /* Remove leading whitespace */
-            while (Character.isWhitespace(sgf.charAt(0))) {
-                sgf.deleteCharAt(0);
-            }
+            property.addValue(propValue.toString());
+            stream.readCharacter();
         }
 
         return property;

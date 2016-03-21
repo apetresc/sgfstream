@@ -1,34 +1,21 @@
 package com.apetresc.sgfstream;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.io.*;
 
 public class SGF {
 
     private SGFGameTree gameTree;
 
-    public void parseSGF(String sgf) throws IncorrectFormatException {
-        StringBuffer sgfBuf = new StringBuffer(sgf);
-        this.gameTree = SGFGameTree.fromString(sgfBuf, null);
+    public void parseSGF(String sgf) throws IncorrectFormatException, UnsupportedEncodingException {
+        try {
+            parseSGF(new ByteArrayInputStream(sgf.getBytes("UTF-8")));
+        } catch (IOException ioe) {
+            // Shouldn't ever happen
+        }
     }
 
-    public void parseSGF(BufferedReader in) throws IncorrectFormatException {
-        String sgfString = "";
-        String inLine;
-        try {
-            inLine = in.readLine();
-
-            while (inLine != null) {
-                sgfString += inLine;
-                inLine = in.readLine();
-            }
-
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        parseSGF(sgfString);
+    public void parseSGF(InputStream in) throws IOException, IncorrectFormatException {
+        this.gameTree = SGFGameTree.fromStream(new SGFStreamReader(in), null);
     }
 
     public SGFIterator iterator() {

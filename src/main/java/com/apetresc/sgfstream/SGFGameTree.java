@@ -1,5 +1,7 @@
 package com.apetresc.sgfstream;
 
+import java.io.IOException;
+import java.io.PushbackReader;
 import java.util.ArrayList;
 
 public class SGFGameTree {
@@ -24,38 +26,22 @@ public class SGFGameTree {
         this.parent = parent;
     }
 
-    static SGFGameTree fromString(StringBuffer sgf, SGFGameTree parent) throws IncorrectFormatException {
+    static SGFGameTree fromStream(SGFStreamReader stream, SGFGameTree parent) throws IOException, IncorrectFormatException {
         SGFGameTree gameTree = new SGFGameTree(parent);
         ArrayList subtrees = new ArrayList();
 
-        /* Remove leading whitespace */
-        while (Character.isWhitespace(sgf.charAt(0))) {
-            sgf.deleteCharAt(0);
-        }
-
-        if (!(sgf.charAt(0) == '(')) {
+        if (!(stream.readCharacter() == '(')) {
             throw new IncorrectFormatException();
         }
-        sgf.deleteCharAt(0);
 
-        /* Remove leading whitespace */
-        while (Character.isWhitespace(sgf.charAt(0))) {
-            sgf.deleteCharAt(0);
+        gameTree.sequence = SGFSequence.fromStream(stream);
+
+        while (!(stream.peek() == ')')) {
+            subtrees.add(SGFGameTree.fromStream(stream, gameTree));
         }
 
-        gameTree.sequence = SGFSequence.fromString(sgf);
-
-        /* Remove leading whitespace */
-        while (Character.isWhitespace(sgf.charAt(0))) {
-            sgf.deleteCharAt(0);
-        }
-
-        while (!(sgf.charAt(0) == ')')) {
-            subtrees.add(SGFGameTree.fromString(sgf, gameTree));
-        }
         gameTree.subtrees = (SGFGameTree[]) subtrees.toArray(new SGFGameTree[0]);
-
-        sgf.deleteCharAt(0);
+        stream.readCharacter();
 
         return gameTree;
     }
