@@ -31,7 +31,7 @@ public class SGFGameTree {
         ArrayList subtrees = new ArrayList();
 
         if (!(stream.readCharacter() == '(')) {
-            throw new IncorrectFormatException();
+            throw new IncorrectFormatException("Expected character '(' to start a sequence", stream);
         }
 
         gameTree.sequence = SGFSequence.fromStream(stream, gameTree);

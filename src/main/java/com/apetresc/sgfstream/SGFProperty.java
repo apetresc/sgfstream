@@ -59,7 +59,7 @@ public class SGFProperty {
             propIdent.append(stream.readCharacter());
         }
         if (!(stream.peek() == '[')) {
-            throw new IncorrectFormatException();
+            throw new IncorrectFormatException("Expected character '[' to define property value", stream);
         }
 
         SGFProperty property = new SGFProperty(propIdent.toString());

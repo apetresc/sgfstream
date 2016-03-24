@@ -27,7 +27,7 @@ public class SGFNode {
     static SGFNode fromStream(SGFStreamReader stream, SGFSequence parent) throws IOException, IncorrectFormatException {
         SGFNode node = new SGFNode(parent);
         if (!(stream.readCharacter() == ';')) {
-            throw new IncorrectFormatException();
+            throw new IncorrectFormatException("Expected character ';' to start a node", stream);
         }
 
         while (Character.isUpperCase(stream.peek())) {
@@ -93,9 +93,8 @@ public class SGFNode {
     
     public String toString() {
         StringBuilder result = new StringBuilder(";");
-        Iterator<SGFProperty> i = properties.values().iterator();
-        while (i.hasNext()) {
-            result.append(i.next().toString());
+        for (SGFProperty property : properties.values()) {
+            result.append(property.toString());
         }
         return result.toString();
     }

@@ -37,9 +37,4 @@ public class SGFStreamReader extends InputStreamReader {
         return readCharacter(true);
     }
 
-    // I care about you more than anything in the entire world
-    // I would trade anything I had for one more kiss
-    // And I can't wait to share all this love I have for you with Calvin and Katrina too <3 <3 <3
-    // Should I commit this comment into the repository along with the code? :D
-    // I LOVE YOU AND I WANT THE WHOLE WORLD TO KNOW IT!!!!!!!
 }
