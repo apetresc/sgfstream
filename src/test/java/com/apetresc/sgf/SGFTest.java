@@ -11,7 +11,7 @@ import junit.framework.TestCase;
 
 public class SGFTest extends TestCase {
 
-    public void testSimpleSgf() throws IOException, IncorrectFormatException {
+    public void testSimpleSGF() throws IOException, IncorrectFormatException {
         SGF sgf = new SGF();
         sgf.parseSGF(this.getClass().getResourceAsStream("/sgf/simple.sgf"));
 
@@ -27,5 +27,18 @@ public class SGFTest extends TestCase {
         }
 
         System.out.println(sgf.toString());
+    }
+
+    public void testComplexSGF() throws IOException, IncorrectFormatException {
+        SGF sgf = new SGF();
+        sgf.parseSGF(this.getClass().getResourceAsStream("/sgf/complex.sgf"));
+
+        assertNotNull(sgf.getRootTree());
+        SGFIterator it = sgf.iterator();
+        while (it.hasNext()) {
+            SGFNode move = it.next();
+            System.out.println(move.getBoardPosition());
+            System.out.println("");
+        }
     }
 }
