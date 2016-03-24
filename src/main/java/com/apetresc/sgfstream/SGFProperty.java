@@ -69,7 +69,7 @@ public class SGFProperty {
             StringBuilder propValue = new StringBuilder();
             boolean escape = false;
 
-            while (!escape && (stream.peek(false) != ']')) {
+            while (escape || (stream.peek(false) != ']')) {
                 escape = false;
                 char nextChar = stream.readCharacter(false);
 
