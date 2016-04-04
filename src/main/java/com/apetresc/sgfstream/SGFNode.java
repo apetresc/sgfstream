@@ -48,8 +48,11 @@ public class SGFNode {
             treeStack.push(treeStack.peek().getParent());
         }
 
-        BoardPosition boardPosition = new BoardPosition(
-                Integer.parseInt(treeStack.peek().getSequence().getNodes().get(0).getProperties().get("SZ").getValues()[0]));
+        int boardSize = 19;
+        if (treeStack.peek().getSequence().getNodes().get(0).getProperties().containsKey("SZ")) {
+            boardSize = Integer.parseInt(treeStack.peek().getSequence().getNodes().get(0).getProperties().get("SZ").getValues()[0]);
+        }
+        BoardPosition boardPosition = new BoardPosition(boardSize);
 
         outer:
         while (!treeStack.empty()) {

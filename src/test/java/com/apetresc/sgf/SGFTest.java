@@ -41,4 +41,20 @@ public class SGFTest extends TestCase {
             System.out.println("");
         }
     }
+
+    public void testNoSizeSGF() throws IOException, IncorrectFormatException {
+        SGF sgf = new SGF();
+        sgf.parseSGF(this.getClass().getResourceAsStream("/sgf/no_sz.sgf"));
+
+        assertNotNull(sgf.getRootTree());
+        SGFIterator it = sgf.iterator();
+        while (it.hasNext()) {
+            SGFNode move = it.next();
+            System.out.println(move.getBoardPosition());
+            System.out.println("");
+        }
+    }
+
+
+
 }
